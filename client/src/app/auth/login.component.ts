@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit{
     if(this.loginForm.valid){
       this.loginService.login(user).subscribe(r=>{
         // localStorage.setItem('token', r.accessToken)
-        // this.route.navigate(['/home'])
+        this.route.navigate(['/home'])
       });
     }
   }
