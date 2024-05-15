@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../core/auth.service';
 import { User } from '../shared/models/user';
 import { Router } from '@angular/router';
+import { LocalStorageService } from '../shared/services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,8 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit{
   private loginService = inject(AuthService)
   private formBuilder= inject(FormBuilder)
-  router = inject(Router);
+  private router = inject(Router);
+  private localStorageService = inject(LocalStorageService);
   loginForm!:FormGroup;
 
   ngOnInit(): void {
@@ -29,10 +31,12 @@ export class LoginComponent implements OnInit{
       email:this.loginForm.controls["email"].value,
       password:this.loginForm.controls["password"].value,
     }
-
     try {
       await this.loginService.login(user);
-      this.router.navigate(['/home']);
+      const {id} = this.localStorageService.getItem('user') as User
+      console.log(id);
+
+      this.router.navigate([`/profile/${id}`]);
 
     } catch (error) {
       alert('ups! something occurred');
