@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit{
   private loginService = inject(AuthService)
   private formBuilder= inject(FormBuilder)
-  route = inject(Router);
+  router = inject(Router);
   loginForm!:FormGroup;
 
   ngOnInit(): void {
@@ -24,17 +24,26 @@ export class LoginComponent implements OnInit{
     })
   }
 
-  submit(){
+  async submit(){
     const user:User={
       email:this.loginForm.controls["email"].value,
       password:this.loginForm.controls["password"].value,
     }
-    if(this.loginForm.valid){
-      this.loginService.login(user).subscribe(r=>{
-        // localStorage.setItem('token', r.accessToken)
-        this.route.navigate(['/home'])
-      });
+
+    try {
+      await this.loginService.login(user);
+      this.router.navigate(['/home']);
+
+    } catch (error) {
+      alert('ups! something occurred');
     }
+    /* VERSION subscripción al observable */
+    // if(this.loginForm.valid){
+      // this.loginService.login(user).subscribe(r=>{
+      //   // localStorage.setItem('token', r.accessToken)
+      //   this.route.navigate(['/home'])
+      // });
+    // }
   }
 
 }

@@ -11,13 +11,16 @@ export class AuthService {
   private url = environment.API_URL;
   http = inject(HttpClient)
 
-  login(user:User){
-    return this.http.post<User>(`${this.url}/login`, user).pipe(catchError(e=>of(e)))
-    // try{
-    //   const result = await firstValueFrom(this.http.post<User>("http://localhost:3000/login", user).pipe(catchError(  e=>of(e))))
-    // }catch(e){
-    //   console.error(e)
-    // }
+async login(credentials:User){
+    try{
+      const result:any = await firstValueFrom(this.http.post<User>("http://localhost:3000/login", credentials))
+
+      const {user} = result;
+      localStorage.setItem('user',JSON.stringify(user))
+
+    }catch(e){
+      throw e;
+    }
   }
 }
 
