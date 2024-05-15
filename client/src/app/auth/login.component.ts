@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../core/auth.service';
 import { User } from '../shared/models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,7 @@ import { User } from '../shared/models/user';
 export class LoginComponent implements OnInit{
   private loginService = inject(AuthService)
   private formBuilder= inject(FormBuilder)
+  route = inject(Router);
   loginForm!:FormGroup;
 
   ngOnInit(): void {
@@ -28,9 +30,10 @@ export class LoginComponent implements OnInit{
       password:this.loginForm.controls["password"].value,
     }
     if(this.loginForm.valid){
-      console.log("pass1");
-      this.loginService.login(user);
-      console.log("pass2",user)
+      this.loginService.login(user).subscribe(r=>{
+        // localStorage.setItem('token', r.accessToken)
+        this.route.navigate(['/home'])
+      });
     }
   }
 
