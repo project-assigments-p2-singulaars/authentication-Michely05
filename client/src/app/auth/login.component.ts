@@ -8,6 +8,7 @@ import {
 import { AuthService } from '../core/auth.service';
 import { User } from '../shared/models/user';
 import { Router } from '@angular/router';
+import { LocalStorageService } from '../shared/services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -19,8 +20,8 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   private loginService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
-  route = inject(Router);
-  localStorageService = inject();
+  private router = inject(Router);
+  private localStorageService = inject(LocalStorageService);
   loginForm!: FormGroup;
 
   ngOnInit(): void {
@@ -36,16 +37,20 @@ export class LoginComponent implements OnInit {
       password: this.loginForm.controls['password'].value,
     };
     try {
-      if (this.loginForm.valid) {
-        // this.loginService.login(user).subscribe((r) => {
-        //   // localStorage.setItem('token', r.accessToken)
-        //   this.route.navigate(['/home']);
-        // });
-        const result = await this.loginService.login(user);
-        this.route.navigate(['']);
-      }
+      await this.loginService.login(user);
+      const { id } = this.localStorageService.getItem('user') as User;
+      console.log(id);
+
+      this.router.navigate([`/profile/${id}`]);
     } catch (error) {
-      alert('Ops! Something went wrong');
+      alert('ups! something occurred');
     }
+    /* VERSION subscripción al observable */
+    // if(this.loginForm.valid){
+    // this.loginService.login(user).subscribe(r=>{
+    //   // localStorage.setItem('token', r.accessToken)
+    //   this.route.navigate(['/home'])
+    // });
+    // }
   }
 }
