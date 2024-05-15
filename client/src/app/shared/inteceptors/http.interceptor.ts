@@ -10,7 +10,9 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     tap((event: HttpEvent<any>) => {
       if (event instanceof HttpResponse) {
+        // console.log(event.body)
         localStorage.setItem('token', event.body.accessToken);
+        return event;
       }
       return event;
     })
