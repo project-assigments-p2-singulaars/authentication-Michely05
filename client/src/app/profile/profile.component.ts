@@ -1,18 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserService } from '../shared/services/user.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrl: './profile.component.scss',
 })
-export class ProfileComponent implements OnInit {
-@Input() id!:string;
+export class ProfileComponent {
+  @Input() id!: string;
+  // private userService = inject(UserService);
+  private router = inject(Router);
 
-ngOnInit(): void {
-  console.log(this.id);
-  
-}
-
+  logout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/home']);
+  }
 }

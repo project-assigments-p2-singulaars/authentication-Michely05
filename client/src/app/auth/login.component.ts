@@ -7,13 +7,13 @@ import {
 } from '@angular/forms';
 import { AuthService } from '../core/auth.service';
 import { User } from '../shared/models/user';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LocalStorageService } from '../shared/services/local-storage.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -43,14 +43,7 @@ export class LoginComponent implements OnInit {
 
       this.router.navigate([`/profile/${id}`]);
     } catch (error) {
-      alert('ups! something occurred');
+      alert('Ops! something went wrong');
     }
-    /* VERSION subscripción al observable */
-    // if(this.loginForm.valid){
-    // this.loginService.login(user).subscribe(r=>{
-    //   // localStorage.setItem('token', r.accessToken)
-    //   this.route.navigate(['/home'])
-    // });
-    // }
   }
 }

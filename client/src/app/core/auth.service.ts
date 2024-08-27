@@ -4,6 +4,7 @@ import { catchError, firstValueFrom, of, tap } from 'rxjs';
 import { User } from '../shared/models/user';
 import { environment } from '../../environments/environment.development';
 import { LocalStorageService } from '../shared/services/local-storage.service';
+import { Router } from '@angular/router';
 
 type LoginResponseType = {
   accessToken: string;
@@ -14,9 +15,20 @@ type LoginResponseType = {
   providedIn: 'root',
 })
 export class AuthService {
+  apiUrl = 'http://localhost:3000';
   private url = environment.apiUrl;
   private http = inject(HttpClient);
   private localStorageService = inject(LocalStorageService);
+  private router = inject(Router);
+
+  register(formGroup: any) {
+    return this.http.post<any>(`${this.apiUrl}/register`, formGroup);
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/home']);
+  }
 
   async login(credentials: User) {
     try {
